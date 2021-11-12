@@ -45,16 +45,17 @@ class _GroupNameWidget extends StatelessWidget {
   const _GroupNameWidget({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    final model =GroupFormWidgetModelProvider.read(context)?.model;
+    final model =GroupFormWidgetModelProvider.watch(context)?.model;
     return  TextField(
       autofocus: true,
-      decoration: const InputDecoration(
-          border: OutlineInputBorder(
+      decoration:  InputDecoration(
+          border: const OutlineInputBorder(
             borderRadius: BorderRadius.all(
               Radius.circular(10),
             ),
           ),
-          labelText: 'Имя группы'),
+          labelText: 'Имя группы',
+      errorText: model?.errorText,),
       onChanged: (value) => model?.groupName = value,
       onEditingComplete: () => model?.saveGroup(context),
     );

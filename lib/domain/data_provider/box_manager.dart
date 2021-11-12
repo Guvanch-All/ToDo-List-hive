@@ -31,7 +31,6 @@ class BoxManager {
     await box.compact();
     await box.close();
   }
-  }
 
   String makeTaskBoxName(int groupKey) => 'tasks_box_$groupKey';
 
