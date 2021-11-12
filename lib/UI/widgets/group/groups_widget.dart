@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:todo_list_hive/widgets/group/groups_widget_model.dart';
+
+import 'groups_widget_model.dart';
 
 class GroupWidget extends StatefulWidget {
   const GroupWidget({Key? key}) : super(key: key);
@@ -17,6 +18,11 @@ class _GroupWidgetState extends State<GroupWidget> {
   Widget build(BuildContext context) {
     return GroupWidgetModelProvider(
         model: _model, child: const _GroupsWidgetBody());
+  }
+  @override
+  void dispose() async{
+    await _model.dispose();
+    super.dispose();
   }
 }
 

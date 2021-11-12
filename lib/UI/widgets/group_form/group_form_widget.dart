@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todo_list_hive/widgets/group_form/group_form_widget_model.dart';
+import 'group_form_widget_model.dart';
 
 class GroupFormWidget extends StatefulWidget {
   const GroupFormWidget({Key? key}) : super(key: key);
@@ -27,12 +27,10 @@ class _GroupFormWidgetBody extends StatelessWidget {
       appBar: AppBar(
         title: const Text('New group'),
       ),
-      body: Center(
+      body: const Center(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Container(
-            child: const _GroupNameWidget(),
-          ),
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: _GroupNameWidget(),
         ),
       ),
       floatingActionButton: FloatingActionButton(

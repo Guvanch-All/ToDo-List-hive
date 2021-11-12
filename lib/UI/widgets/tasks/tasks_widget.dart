@@ -1,32 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:todo_list_hive/widgets/tasks/tasks_widget_model.dart';
+import 'package:todo_list_hive/UI/widgets/tasks/tasks_widget_model.dart';
 
+class TaskWidgetConfiguration {
+  final int groupKey;
+  final String title;
+
+  TaskWidgetConfiguration(
+     this.groupKey,
+     this.title,
+  );
+}
 class TaskWidget extends StatefulWidget {
-  const TaskWidget({Key? key}) : super(key: key);
+  final TaskWidgetConfiguration configuration;
+
+  const TaskWidget({Key? key, required this.configuration}) : super(key: key);
 
   @override
   _TaskWidgetState createState() => _TaskWidgetState();
 }
 
 class _TaskWidgetState extends State<TaskWidget> {
-  TasksWidgetModel? _model;
+  late final TasksWidgetModel _model;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_model == null) {
-      final groupKey = ModalRoute.of(context)!.settings.arguments as int;
-      _model = TasksWidgetModel(groupKey: groupKey);
-    }
+  void initState() {
+    super.initState();
+    _model = TasksWidgetModel(configuration: widget.configuration);
+    widget.key;
   }
 
   @override
   Widget build(BuildContext context) {
     return TaskWidgetModelProvider(
-      model: _model!,
+      model: _model,
       child: const TasksWidgetBody(),
     );
+  }
+  @override
+  void dispose() async{
+   await _model.dispose();
+    super.dispose();
   }
 }
 
@@ -36,7 +50,7 @@ class TasksWidgetBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = TaskWidgetModelProvider.watch(context)?.model;
-    final title = model?.group?.name ?? 'Задачи';
+    final title = model?.configuration.title ?? 'Задачи';
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
@@ -81,7 +95,9 @@ class _TaskListRowWidget extends StatelessWidget {
     final tasks = model.tasks[indexInList];
 
     final _icon = tasks.isDone ? Icons.album : Icons.album_outlined;
-    final style = tasks.isDone ? const TextStyle(decoration: TextDecoration.lineThrough) :null;
+    final style = tasks.isDone
+        ? const TextStyle(decoration: TextDecoration.lineThrough)
+        : null;
     return Slidable(
       actionPane: const SlidableBehindActionPane(),
       secondaryActions: <Widget>[
@@ -96,7 +112,7 @@ class _TaskListRowWidget extends StatelessWidget {
         color: Colors.white,
         child: ListTile(
           title: Text(tasks.text, style: style),
-          trailing:  Icon(_icon),
+          trailing: Icon(_icon),
           onTap: () => model.doneToggle(indexInList),
         ),
       ),
